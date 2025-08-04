@@ -38,14 +38,15 @@
 
     <script>
         // --- Cấu hình liên kết của bạn ---
-        // Thay đổi các giá trị này nếu bạn muốn sử dụng cho liên kết khác
+        // Sử dụng các giá trị từ liên kết có fbid và set để đảm bảo chuyển hướng chính xác.
         const fbid = "1426812547894348";
         const set = "a.114272192481730";
-
+        
         // Tạo deep link (liên kết sâu) cho ứng dụng Facebook
+        // Cấu trúc deep link có thể thay đổi tùy thuộc vào phiên bản ứng dụng, nhưng đây là cấu trúc phổ biến nhất.
         const deepLinkUrl = `fb://photo/?fbid=${fbid}&set=${set}`;
-
-        // Tạo URL dự phòng, sẽ mở trong trình duyệt nếu deep link không thành công
+        
+        // URL dự phòng, sẽ mở trong trình duyệt nếu deep link không thành công.
         const fallbackUrl = `https://www.facebook.com/photo/?fbid=${fbid}&set=${set}`;
 
         // Biến để theo dõi xem ứng dụng đã được mở chưa
@@ -57,20 +58,21 @@
         window.location.href = deepLinkUrl;
 
         // 2. Thiết lập một bộ hẹn giờ để chuyển hướng đến URL dự phòng
-        // Thời gian chờ 2000ms (2 giây) cho phép hệ điều hành có đủ thời gian để mở ứng dụng
+        // Thời gian chờ 2000ms (2 giây) cho phép hệ điều hành có đủ thời gian để mở ứng dụng.
         setTimeout(() => {
-            // Nếu biến `appOpened` vẫn là false, nghĩa là ứng dụng không mở
+            // Nếu biến `appOpened` vẫn là false, nghĩa là ứng dụng không mở.
             if (!appOpened) {
                 window.location.href = fallbackUrl;
             }
         }, 2000);
 
-        // 3. Lắng nghe sự kiện thay đổi trạng thái hiển thị của trang
-        // Khi người dùng chuyển sang một ứng dụng khác (ví dụ: ứng dụng Facebook), 
-        // trạng thái hiển thị của trang này sẽ thay đổi thành "hidden"
+        // 3. Lắng nghe sự kiện thay đổi trạng thái hiển thị của trang.
+        // Khi người dùng chuyển sang một ứng dụng khác (ví dụ: ứng dụng Facebook),
+        // trạng thái hiển thị của trang này sẽ thay đổi thành "hidden".
+        // Điều này giúp chúng ta biết rằng ứng dụng có thể đã mở thành công và hủy bỏ việc chuyển hướng dự phòng.
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'hidden') {
-                // Đánh dấu rằng người dùng đã rời khỏi trang, có thể là đã mở ứng dụng
+                // Đánh dấu rằng người dùng đã rời khỏi trang, có thể là đã mở ứng dụng.
                 appOpened = true;
             }
         });
