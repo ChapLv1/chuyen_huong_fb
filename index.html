@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đang chuyển hướng đến Facebook...</title>
+    <!-- Thêm Tailwind CSS để trang web trông đẹp hơn và thích ứng với mọi thiết bị -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 text-center max-w-md w-full">
+        <!-- Tiêu đề và thông báo cho người dùng -->
+        <h1 class="text-3xl md:text-4xl font-extrabold text-blue-600 mb-4">
+            Đang chuyển hướng...
+        </h1>
+        <p class="text-gray-700 text-base md:text-lg mb-6">
+            Xin chờ một chút, chúng tôi đang cố gắng mở bài viết trong ứng dụng Facebook.
+        </p>
+
+        <!-- Biểu tượng loading -->
+        <div class="flex justify-center mb-6">
+            <svg class="animate-spin h-12 w-12 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+        </div>
+
+        <p class="text-gray-500 text-sm">
+            Nếu ứng dụng không mở, bạn sẽ được đưa đến trình duyệt web.
+        </p>
+    </div>
+
+    <script>
+        // --- Cấu hình liên kết của bạn ---
+        // Thay đổi các giá trị này nếu bạn muốn sử dụng cho liên kết khác
+        const fbid = "1426812547894348";
+        const set = "a.114272192481730";
+
+        // Tạo deep link (liên kết sâu) cho ứng dụng Facebook
+        const deepLinkUrl = `fb://photo/?fbid=${fbid}&set=${set}`;
+
+        // Tạo URL dự phòng, sẽ mở trong trình duyệt nếu deep link không thành công
+        const fallbackUrl = `https://www.facebook.com/photo/?fbid=${fbid}&set=${set}`;
+
+        // Biến để theo dõi xem ứng dụng đã được mở chưa
+        let appOpened = false;
+
+        // --- Logic chuyển hướng ---
+
+        // 1. Cố gắng mở deep link ngay lập tức
+        window.location.href = deepLinkUrl;
+
+        // 2. Thiết lập một bộ hẹn giờ để chuyển hướng đến URL dự phòng
+        // Thời gian chờ 2000ms (2 giây) cho phép hệ điều hành có đủ thời gian để mở ứng dụng
+        setTimeout(() => {
+            // Nếu biến `appOpened` vẫn là false, nghĩa là ứng dụng không mở
+            if (!appOpened) {
+                window.location.href = fallbackUrl;
+            }
+        }, 2000);
+
+        // 3. Lắng nghe sự kiện thay đổi trạng thái hiển thị của trang
+        // Khi người dùng chuyển sang một ứng dụng khác (ví dụ: ứng dụng Facebook), 
+        // trạng thái hiển thị của trang này sẽ thay đổi thành "hidden"
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') {
+                // Đánh dấu rằng người dùng đã rời khỏi trang, có thể là đã mở ứng dụng
+                appOpened = true;
+            }
+        });
+
+    </script>
+</body>
+</html>
